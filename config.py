@@ -8,7 +8,7 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 ANTHROPIC_MODEL = "claude-3-opus-20240229"  # or other available Claude models
 
 # Blog Processing Configuration
-MAX_POSTS_IN_SUMMARY = 10
+MAX_POSTS_IN_SUMMARY = 20
 OUTPUT_FORMAT = "markdown"  # markdown or html
 DATE_RANGE_FILTER_ENABLED = False
 START_DATE = "2025-01-01"

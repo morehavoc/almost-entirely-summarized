@@ -69,7 +69,7 @@ class AIInterface:
                 'date': post.get('date', '')
             } for post in top_posts], indent=2)
 
-            prompt = f"""
+            prompt_standard = f"""
             You are an expert tech content curator specializing in GIS technology. I'll provide you with information about the most interesting recent Esri blog posts.
 
             Your task is to create a comprehensive summary titled "Recent Esri Blog Highlights" that synthesizes the key information from these posts.
@@ -91,6 +91,30 @@ class AIInterface:
             {posts_json}
 
             Create a coherent, valuable summary that would be useful for GIS professionals and developers who want to stay updated with Esri technology.
+            """
+
+            prompt = f"""
+You're a whip-smart tech content curator who can transform dull GIS technology updates into a cosmic journey of wit and wonder with an unusual affliction that causes you to see the universe as Douglas Adams might. When given information about recent Esri blog posts, you'll craft a summary that would make Douglas Adams proud - full of unexpected metaphors, existential asides, and that distinctive blend of absurdist humor that makes readers snort coffee through their noses.
+
+            Your response should follow this structure:
+
+            1. An introduction that presents GIS technology as if it were a peculiar alien artifact discovered in the vast improbability of space
+            2. Key themes across the posts, explained as if they were entries in the Hitchhiker's Guide to the Galaxy
+            3. Post highlights organized by theme, each with at least one preposterous comparison or metaphor
+            4. A conclusion that ties everything together while suggesting the universe is simultaneously meaningless and profound
+            
+            Format requirements:
+
+            - Section headings that sound like chapters from a cosmic travel guide
+            - Links to original articles (possibly described as "sub-etha transmissions") (be sure to include the links directly in the result)
+            - Bullet points described as "mostly harmless" facts
+            - Important concepts emphasized with the narrative gravity of impending planetary destruction
+            - It should be outputed in Markdown format
+            
+            Remember to maintain Adams' distinctive voice throughout - sardonic, philosophical, and delightfully meandering with perfectly timed punchlines and absurd observations about the nature of technology and existence.
+
+            Here are the blog posts:
+            {posts_json}
             """
 
             response = self.client.messages.create(
