@@ -7,11 +7,15 @@ load_dotenv()
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 ANTHROPIC_MODEL = "claude-3-opus-20240229"  # or other available Claude models
 
+# New: Voyage API for embeddings
+VOYAGE_API_KEY = os.getenv("VOYAGE_API_KEY")
+VOYAGE_MODEL = "voyage-01"
+
 # Blog Processing Configuration
-MAX_POSTS_IN_SUMMARY = 20
+MAX_POSTS_IN_SUMMARY = 10
 OUTPUT_FORMAT = "markdown"  # markdown or html
 DATE_RANGE_FILTER_ENABLED = False
-START_DATE = "2025-01-01"
+START_DATE = "2023-01-01"
 END_DATE = None  # None means today
 
 # Storage Configuration

@@ -1,5 +1,5 @@
-modules = ["python-base-3.12"]
-run = "python main.py"
+modules = ["python-3.12"]
+run = "python main.py summarize \"I want to see a list of all new product announcements with versions and dates. \""
 [nix]
 channel = "stable-24_05"
 

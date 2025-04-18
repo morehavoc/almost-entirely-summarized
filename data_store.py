@@ -1,5 +1,6 @@
 import json
 import os
+import numpy as np
 from datetime import datetime
 from utils import logger
 
@@ -19,11 +20,11 @@ class DataStore:
             logger.info(f"Created new storage file: {self.storage_file}")
 
     def save_blog_data(self, blog_data):
-        """Save processed blog data to storage"""
+        """Save processed blog data with embeddings to storage"""
         try:
             existing_data = self.load_all_data()
 
-            # Check if URL already exists in data
+            # Check if URL already exists and update if it does
             for i, post in enumerate(existing_data):
                 if post.get('url') == blog_data.get('url'):
                     # Update existing entry
@@ -45,7 +46,7 @@ class DataStore:
             return False
 
     def load_all_data(self):
-        """Load all stored blog data"""
+        """Load all stored blog data including embeddings"""
         try:
             if os.path.exists(self.storage_file) and os.path.getsize(self.storage_file) > 0:
                 with open(self.storage_file, 'r') as f:
@@ -63,9 +64,14 @@ class DataStore:
                 return True
         return False
 
-    def get_top_posts(self, limit=10):
-        """Get the top N posts by interest score"""
-        data = self.load_all_data()
-        # Sort by interest score (descending)
-        sorted_data = sorted(data, key=lambda x: x.get('interestScore', 0), reverse=True)
-        return sorted_data[:limit]
+    def get_embeddings_as_matrix(self):
+        """Return a matrix of all embeddings for efficient similarity calculation"""
+        try:
+            data = self.load_all_data()
+            embeddings = [post.get("embedding", []) for post in data if "embedding" in post]
+            if embeddings:
+                return np.array(embeddings)
+            return np.array([])
+        except Exception as e:
+            logger.error(f"Error creating embedding matrix: {e}")
+            return np.array([])

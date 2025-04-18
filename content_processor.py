@@ -1,4 +1,3 @@
-# content_processor.py
 import requests
 from bs4 import BeautifulSoup
 import datetime
@@ -6,8 +5,9 @@ from utils import logger, parse_date
 import re
 
 class BlogContentProcessor:
-    def __init__(self, ai_interface):
+    def __init__(self, ai_interface, embedding_service):
         self.ai_interface = ai_interface
+        self.embedding_service = embedding_service
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -241,7 +241,7 @@ class BlogContentProcessor:
             }
 
     def process_blog(self, url):
-        """Process a blog post completely, returning structured data"""
+        """Process a blog post completely, returning structured data with summary and embedding"""
         logger.info(f"Processing blog: {url}")
 
         html_content = self.fetch_content(url)
@@ -255,8 +255,11 @@ class BlogContentProcessor:
             logger.warning(f"Content too short or not found for {url}")
             return None
 
-        # Get AI summary and score
-        ai_result = self.ai_interface.summarize_blog(content, metadata["title"], url)
+        # Get AI summary
+        summary = self.ai_interface.summarize_blog(content, metadata["title"], url)
+
+        # Generate embedding for the summary
+        embedding, model = self.embedding_service.generate_embedding(summary)
 
         # Combine all data
         result = {
@@ -264,11 +267,11 @@ class BlogContentProcessor:
             "title": metadata["title"],
             "date": metadata["date"],
             "content": content[:5000],  # Store truncated content
-            "summary": ai_result.get("summary", "No summary generated"),
-            "interestScore": ai_result.get("interestScore", 1),
-            "rationale": ai_result.get("rationale", "No rationale provided"),
+            "summary": summary,
+            "embedding": embedding,
+            "embeddingModel": model,
             "processedDate": datetime.datetime.now().isoformat()
         }
 
-        logger.info(f"Successfully processed blog: {url} - Score: {result['interestScore']}")
+        logger.info(f"Successfully processed blog: {url}")
         return result
